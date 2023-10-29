@@ -55,4 +55,27 @@ class BusinessController extends Controller
 
         return response()->json(['message' => 'Business created successfully', 'data' => $business], 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'name' => 'string|max:255',
+            'image_url' => 'url',
+            'is_closed' => 'boolean',
+            'url' => 'url',
+            'review_count' => 'integer',
+            'transactions' => 'string|max:255',
+            'rating' => 'numeric|between:0,5',
+            'latitude' => 'numeric',
+            'longitude' => 'numeric',
+            'price' => 'string|max:255',
+            'phone' => 'string|max:20',
+            'display_phone' => 'string|max:20',
+            'distance' => 'numeric',
+        ]);
+
+        $response = $this->businessRepository->updateDataById($id, $data);
+
+        return $response;
+    }
 }

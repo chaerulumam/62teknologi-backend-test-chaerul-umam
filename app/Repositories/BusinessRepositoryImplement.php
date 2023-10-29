@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Business;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class BusinessRepositoryImplement implements BusinessRepositoryInterface
 {
@@ -87,5 +89,25 @@ class BusinessRepositoryImplement implements BusinessRepositoryInterface
     public function create(array $data)
     {
         return Business::create($data);
+    }
+
+    public function updateDataById(int $id, array $data)
+    {
+        $business = Business::find($id);
+
+        if (!$business) {
+            return response()->json(['message' => 'Business not found'], 404);
+        }
+
+        $business->update($data);
+
+        if (isset($data['name'])) {
+            $business->update(['alias' => Str::slug($data['name'])]);
+        }
+
+        return response()->json([
+            'message' => 'Business updated successfully',
+            'data' => $business
+        ]);
     }
 }
