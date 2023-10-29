@@ -9,7 +9,13 @@ class Business extends Model
 {
     use HasFactory;
 
-    protected $guareded = 'id';
+    // protected $guareded = 'id';
+
+    protected $fillable = [
+        'name', 'alias', 'image_url', 'is_closed', 'url',
+        'review_count', 'transactions', 'rating', 'latitude',
+        'longitude', 'price', 'phone', 'display_phone', 'distance'
+    ];
 
     public function categories()
     {

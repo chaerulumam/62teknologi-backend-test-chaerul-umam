@@ -83,4 +83,9 @@ class BusinessRepositoryImplement implements BusinessRepositoryInterface
 
         return response()->json($response);
     }
+
+    public function create(array $data)
+    {
+        return Business::create($data);
+    }
 }
