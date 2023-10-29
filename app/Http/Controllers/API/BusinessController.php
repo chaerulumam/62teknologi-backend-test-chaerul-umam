@@ -78,4 +78,15 @@ class BusinessController extends Controller
 
         return $response;
     }
+
+    public function destroy($id)
+    {
+        try {
+            $this->businessRepository->deleteDataById($id);
+
+            return response()->json(['message' => 'Business deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
 }

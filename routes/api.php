@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('business/{id}', [BusinessController::class, 'getBusinessDetails']);
 Route::post('business', [BusinessController::class, 'store']);
 Route::put('business/{id}', [BusinessController::class, 'update']);
+Route::delete('business/{id}', [BusinessController::class, 'destroy']);

@@ -110,4 +110,15 @@ class BusinessRepositoryImplement implements BusinessRepositoryInterface
             'data' => $business
         ]);
     }
+
+    public function deleteDataById(int $id)
+    {
+        $business = DB::table('businesses')->where('id', $id)->delete($id);
+
+        if (!$business) {
+            throw new \Exception('Delete data failed');
+        }
+
+        return $business;
+    }
 }
