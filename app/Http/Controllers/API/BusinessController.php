@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Business;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use App\Repositories\BusinessRepositoryInterface;
 
 class BusinessController extends Controller
@@ -24,10 +21,30 @@ class BusinessController extends Controller
         $business = $this->businessRepository->businessDetails($id);
 
         if (!$business) {
-            return response()->json(['error' => 'Business Not Found'], 404);
+            return response()->json(['messsage' => 'Business Not Found'], 404);
         }
 
         return response()->json($business);
+    }
+
+    public function getDataByParams(Request $request)
+    {
+        $field = $request->input('field', null);
+        $keyword = $request->input('keyword', null);
+        $sortBy = $request->input('sort_by', 'name');
+        $limit = $request->input('limit', 10);
+
+        $result = $this->businessRepository->getDataByParams($field, $keyword, $sortBy, $limit);
+
+        if (empty($result['businesses'])) {
+            return response()->json([
+                "success" => true,
+                "message" => "No businesses found based on the provided criteria.",
+                "businesses" => [],
+            ]);
+        }
+
+        return response()->json($result);
     }
 
     public function store(Request $request)

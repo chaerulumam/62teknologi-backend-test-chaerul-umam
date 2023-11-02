@@ -13,7 +13,7 @@ class BusinessRepositoryImplement implements BusinessRepositoryInterface
         $business = Business::with('categories', 'location')->find($id);
 
         if (!$business) {
-            return response()->json(['error' => 'Business Not Found'], 404);
+            return response()->json(['message' => 'Business Not Found'], 404);
         }
 
         $location = $business->location;
@@ -120,5 +120,60 @@ class BusinessRepositoryImplement implements BusinessRepositoryInterface
         }
 
         return $business;
+    }
+
+    public function getDatabyParams($field = null, $keyword = null, $sortBy = null, $limit = null)
+    {
+        $dataSort = [
+            'alias',
+            'name',
+            'image_url',
+            'url',
+            'alias',
+            'name',
+            'image_url',
+            'url',
+            'is_closed',
+            'review_count',
+            'categories',
+            'rating',
+            'coordinates',
+            'transactions',
+            'price',
+            'location',
+            'phone',
+            'display_phone',
+            'distance',
+        ];
+
+        if (!in_array($sortBy, $dataSort)) {
+            return [
+                "success" => false,
+                "message" => "Invalid sort_by parameter. Allowed values: " . implode(', ', $dataSort),
+            ];
+        }
+
+        $businesses = Business::where($field, 'like', '%' . $keyword . '%')
+            ->orderBy($sortBy)
+            ->paginate($limit);
+
+        $query = Business::query();
+
+        // Apply search filters
+        if ($field && $keyword) {
+            $query->where($field, 'like', '%' . $keyword . '%');
+        }
+
+        // Apply sorting
+        $query->orderBy($sortBy);
+
+        // Apply limit
+        $businesses = $query->paginate($limit);
+
+        return [
+            "success" => true,
+            "message" => "Data retrieved successfully",
+            "businesses" => $businesses,
+        ];
     }
 }
